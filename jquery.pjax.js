@@ -278,7 +278,7 @@ function pjax(options) {
       container: context.selector,
       fragment: options.fragment,
       timeout: options.timeout,
-      append = options.append
+      append: options.append
     }
 
     if (options.push || options.replace) {
