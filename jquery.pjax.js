@@ -277,7 +277,8 @@ function pjax(options) {
       title: container.title,
       container: context.selector,
       fragment: options.fragment,
-      timeout: options.timeout
+      timeout: options.timeout,
+      append = options.append
     }
 
     if (options.push || options.replace) {
@@ -295,7 +296,13 @@ function pjax(options) {
       state: pjax.state,
       previousState: previousState
     })
-    context.html(container.contents)
+
+    if (options.append) {
+      context.append(container.contents)
+    }
+    else {
+      context.html(container.contents)
+    }
 
     // FF bug: Won't autofocus fields that are inserted via JS.
     // This behavior is incorrect. So if theres no current focus, autofocus
@@ -346,7 +353,8 @@ function pjax(options) {
       title: document.title,
       container: context.selector,
       fragment: options.fragment,
-      timeout: options.timeout
+      timeout: options.timeout,
+      append: options.append
     }
     window.history.replaceState(pjax.state, document.title)
   }
@@ -463,7 +471,8 @@ function onPjaxPopstate(event) {
         push: false,
         fragment: state.fragment,
         timeout: state.timeout,
-        scrollTo: false
+        scrollTo: false,
+        append: state.append
       }
 
       if (contents) {
@@ -476,7 +485,12 @@ function onPjaxPopstate(event) {
           previousState: previousState
         })
         container.trigger(beforeReplaceEvent, [contents, options])
-        container.html(contents)
+        if (options.append) {
+          container.append(contents)
+        }
+        else {
+          container.html(contents)
+        }
 
         container.trigger('pjax:end', [null, options])
       } else {
@@ -852,6 +866,7 @@ function enable() {
     timeout: 650,
     push: true,
     replace: false,
+    append: false,
     type: 'GET',
     dataType: 'html',
     scrollTo: 0,
